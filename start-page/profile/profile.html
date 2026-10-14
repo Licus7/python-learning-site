@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人档案</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <style>
+        :root {
+            --primary-brown: #A0522D;
+            --light-brown: #D2B48C;
+            --dark-brown: #8B4513;
+            --bg-color: #F5F5DC;
+            --card-bg: #FFF8DC;
+            --text-dark: #333;
+            --text-light: #666;
+            --success-green: #28a745;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(160, 82, 45, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        /* 返回按钮 */
+        .back-retro {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--primary-brown), var(--dark-brown));
+            color: white !important;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(139, 69, 19, 0.3);
+            transition: all 0.3s;
+        }
+
+        .back-retro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(139, 69, 19, 0.4);
+            color: white;
+        }
+
+        /* 头部区域 */
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--light-brown);
+            margin-bottom: 30px;
+        }
+
+        .profile-img-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .edit-avatar-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-brown);
+            color: white;
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .edit-avatar-btn:hover {
+            background: var(--dark-brown);
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: var(--primary-brown);
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 个人信息卡片 */
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--light-brown);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-brown);
+        }
+
+        .info-label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark-brown);
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--dark-brown);
+        }
+
+        /* 编辑按钮 */
+        .edit-btn {
+            padding: 8px 20px;
+            background: linear-gradient(to right, var(--primary-brown), var(--dark-brown));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(160, 82, 45, 0.3);
+        }
+
+        /* 编辑表单 */
+        .edit-form {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid var(--light-brown);
+            display: none;
+        }
+
+        .edit-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-brown);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border: 2px solid var(--light-brown);
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 0.2rem rgba(160, 82, 45, 0.25);
+        }
+
+        /* 性别选择 */
+        .gender-selection {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .gender-option {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            padding: 15px;
+            border: 2px solid var(--light-brown);
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .gender-option:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-brown);
+        }
+
+        .gender-option.selected {
+            background: linear-gradient(135deg, var(--light-brown), var(--primary-brown));
+            color: white;
+            border-color: var(--primary-brown);
+        }
+
+        .gender-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        /* 按钮组 */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-save {
+            flex: 2;
+            padding: 12px;
+            background: linear-gradient(to right, var(--success-green), #218838);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* 经验进度条 */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress {
+            height: 20px;
+            border-radius: 10px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-brown), #FFA500);
+            transition: width 0.5s ease;
+        }
+
+        /* 朋友列表 */
+        .friends-section {
+            margin-top: 40px;
+        }
+
+        .friends-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .friend-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--light-brown);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .friend-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(139, 69, 19, 0.15);
+        }
+
+        .friend-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid var(--light-brown);
+        }
+
+        /* 登出按钮 */
+        #logoutButton {
+            margin-top: 20px;
+            padding: 12px 40px;
+            background: linear-gradient(to right, #dc3545, #c82333);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        #logoutButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .gender-selection {
+                flex-direction: column;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .friends-list {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        /* 保存提示 */
+        .save-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-green);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .save-notification.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+     <div class="container">
+        <!-- 返回按钮 -->
+        <a href="../../menu.html" class="back-retro">
+            <i class="fas fa-arrow-left"></i> 返回菜单
+        </a>
+
+        <!-- 头部区域 -->
+        <header>
+            <div class="profile-img-container">
+                <img id="avatarImg" src="https://api.dicebear.com/7.x/avataaars/svg?seed=用户" alt="头像" class="profile-img">
+                <div class="edit-avatar-btn" onclick="changeAvatar()">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+            <h1>角色档案</h1>
+        </header>
+
+        <div class="info-item">
+    <span class="info-label">学习等级:</span>
+    <span class="info-value" id="levelDisplay">等级1</span>
+</div>
+
+<div class="info-item">
+    <span class="info-label">章节完成:</span>
+    <span class="info-value" id="lessonDisplay">0/8</span>
+</div>
+
+<div class="info-item">
+    <span class="info-label">总正确率:</span>
+    <span class="info-value" id="accuracyDisplay">0%</span>
+</div>
+
+<!--可以在底部添加重置按钮-->
+<button id="resetProgressBtn" class="btn btn-warning mt-3"
+        style="background:#ffc107;color:#000;">
+    <i class="fas fa-redo"></i>重置答题进度
+</button>
+
+        <!-- 个人信息显示区 -->
+        <div class="profile-card">
+            <div class="info-item">
+                <span class="info-label">用户名:</span>
+                <span class="info-value" id="usernameDisplay">未设置</span>
+                <button class="edit-btn" onclick="editField('username')">
+                    <i class="fas fa-edit"></i> 编辑
+                </button>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">角色ID:</span>
+                <span class="info-value" id="userIdDisplay">未设置</span>
+                <button class="edit-btn" onclick="editField('userId')">
+                    <i class="fas fa-edit"></i> 编辑
+                </button>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">性别:</span>
+                <span class="info-value" id="genderDisplay">未设置</span>
+                <button class="edit-btn" onclick="editField('gender')">
+                    <i class="fas fa-edit"></i> 编辑
+                </button>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">密码:</span>
+                <span class="info-value">••••••••</span>
+                <button class="edit-btn" onclick="editField('password')">
+                    <i class="fas fa-edit"></i> 修改
+                </button>
+            </div>
+
+            <!-- 经验进度条 -->
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>经验值</span>
+                    <span id="experienceText">0/1000 XP</span>
+                </div>
+                <div class="progress">
+                    <div id="experienceBar" class="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+
+
+        <!-- 在已完成课程下面添加 -->
+<div class="info-item">
+    <span class="info-label">Boss状态:</span>
+    <span class="info-value" id="bossStatusDisplay" style="color: #dc3545;">未战胜</span>
+</div>
+
+<!-- 也可以添加一个Boss战胜徽章 -->
+<div id="bossBadge" style="display: none;" class="mt-3">
+    <div class="alert alert-success">
+        <i class="fas fa-trophy"></i> 
+        <strong>Boss征服者!</strong> 已击败红色暴鲤龙！
+    </div>
+</div>
+
+        <!-- 编辑表单 -->
+        <div id="editForm" class="edit-form">
+            <h3 id="editTitle" style="color: var(--primary-brown); margin-bottom: 20px;">编辑信息</h3>
+            
+            <div id="usernameEdit" class="form-group">
+                <label class="form-label">用户名:</label>
+                <input type="text" id="usernameInput" class="form-control" placeholder="请输入用户名">
+            </div>
+
+            <div id="userIdEdit" class="form-group" style="display: none;">
+                <label class="form-label">角色ID:</label>
+                <input type="text" id="userIdInput" class="form-control" placeholder="请输入角色ID">
+            </div>
+
+            <div id="genderEdit" class="form-group" style="display: none;">
+                <label class="form-label">性别:</label>
+                <div class="gender-selection">
+                    <div class="gender-option" onclick="selectGender('male')">
+                        <div class="gender-icon">👨</div>
+                        <div>男性</div>
+                    </div>
+                    <div class="gender-option" onclick="selectGender('female')">
+                        <div class="gender-icon">👩</div>
+                        <div>女性</div>
+                    </div>
+                    <div class="gender-option" onclick="selectGender('other')">
+                        <div class="gender-icon">🧑</div>
+                        <div>其他</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="passwordEdit" class="form-group" style="display: none;">
+                <label class="form-label">新密码:</label>
+                <input type="password" id="passwordInput" class="form-control" placeholder="请输入新密码">
+                <label class="form-label mt-3">确认密码:</label>
+                <input type="password" id="passwordConfirm" class="form-control" placeholder="请再次输入密码">
+            </div>
+
+            <div class="button-group">
+                <button class="btn-save" onclick="saveChanges()">
+                    <i class="fas fa-save"></i> 保存更改
+                </button>
+                <button class="btn-cancel" onclick="cancelEdit()">
+                    <i class="fas fa-times"></i> 取消
+                </button>
+            </div>
+        </div>
+
+        <!-- 朋友列表 -->
+        <div class="friends-section">
+            <h2 style="color: var(--primary-brown);">我的好友</h2>
+            <div id="friendsList" class="friends-list">
+                <!-- 好友会动态加载 -->
+            </div>
+        </div>
+
+        <!-- 登出按钮 -->
+        <button id="logoutButton" class="btn btn-danger mt-4">
+            <i class="fas fa-sign-out-alt"></i> 登出账户
+        </button>
+    </div>
+
+    <!-- 保存成功提示 -->
+    <div id="saveNotification" class="save-notification">
+        <i class="fas fa-check-circle"></i> 保存成功！
+    </div>
+
+<script src="../progressManager.js"></script>
+
+<script>
+// 用户数据
+let userData = {
+    username: localStorage.getItem('userProfile_username') || '111',
+    userId: localStorage.getItem('userProfile_userId') || 'ID_001',
+    gender: localStorage.getItem('userProfile_gender') || 'male',
+    password: localStorage.getItem('userProfile_password') || '123456',
+    experience: parseInt(localStorage.getItem('userProfile_experience')) || 350,
+    maxExperience: 1000,
+    lessonsCompleted: parseInt(localStorage.getItem('userProfile_lessonsCompleted')) || 25,
+    totalLessons: 100,
+    friends: JSON.parse(localStorage.getItem('userProfile_friends')) || [
+        { name: '李四', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=李四' },
+        { name: '王五', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=王五' },
+        { name: '赵六', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=赵六' },
+        { name: '小红', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=小红' }
+    ]
+};
+
+// 当前编辑的字段
+let currentEditField = '';
+let progressMgr = null;
+let welcomeNotificationShown = false; // 防止重复显示欢迎消息
+
+// 页面加载时初始化
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('个人档案页面加载...');
+    
+    // 等待 progressManager 加载
+    setTimeout(function() {
+        if (typeof ProgressManager === 'undefined') {
+            console.log('手动加载 ProgressManager');
+            const script = document.createElement('script');
+            script.src = '../progressManager.js';
+            script.onload = initProfileProgress;
+            script.onerror = function() {
+                console.error('加载progressManager.js失败，使用备用方案');
+                initProfileProgress();
+            };
+            document.head.appendChild(script);
+        } else {
+            initProfileProgress();
+        }
+    }, 100);
+});
+
+function initProfileProgress() {
+    console.log('初始化个人档案进度...');
+    
+    // 确保 progressManager 实例存在
+    if (!window.progressManager && typeof ProgressManager === 'function') {
+        window.progressManager = new ProgressManager();
+    }
+    progressMgr = window.progressManager;
+    
+    // 显示欢迎消息和进度
+    showWelcomeProgress();
+    
+    // 继续原来的初始化
+    loadUserData();
+    renderFriends();
+    updateExperienceBar();
+    syncProgressData();
+    setupProgressListeners();
+    setupResetButton();
+}
+
+// ✅ 新增：显示欢迎消息和进度
+function showWelcomeProgress() {
+    if (welcomeNotificationShown) return;
+    
+    setTimeout(() => {
+        try {
+            // 方法1：从progressManager获取
+            if (window.progressManager) {
+                const stats = window.progressManager.getStatsForDisplay();
+                if (stats.hasData) {
+                    showProgressNotification(stats);
+                    welcomeNotificationShown = true;
+                    return;
+                }
+            }
+            
+            // 方法2：从localStorage直接读取
+            const oldScores = JSON.parse(localStorage.getItem('chapterScores') || '{}');
+            let completedCount = 0;
+            let latestChapter = 0;
+            let latestScore = 0;
+            
+            for (let i = 1; i <= 10; i++) {
+                if (oldScores[i] && oldScores[i] > 0) {
+                    completedCount++;
+                    latestChapter = i;
+                    latestScore = oldScores[i];
+                }
+            }
+            
+            if (completedCount > 0) {
+                showSimpleNotification(completedCount, latestChapter, latestScore);
+                welcomeNotificationShown = true;
+            }
+        } catch (e) {
+            console.warn('显示欢迎消息时出错:', e);
+        }
+    }, 1500);
+}
+
+// ✅ 新增：显示详细的进度通知
+function showProgressNotification(stats) {
+    const messages = [];
+    
+    if (stats.completedChapters > 0) {
+        messages.push(`已完成 ${stats.completedChapters}/${stats.totalChapters} 章`);
+        messages.push(`平均正确率: ${stats.accuracy}%`);
+        
+        if (stats.bossDefeated) {
+            messages.push(`🎉 已战胜Boss！`);
+        }
+        
+        // 创建通知元素
+        const notification = document.createElement('div');
+        notification.id = 'welcomeProgress';
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 9999;
+            max-width: 300px;
+            animation: slideInRight 0.5s ease-out;
+            border-left: 5px solid #ffd700;
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <i class="fas fa-chart-line" style="font-size: 24px; margin-right: 10px;"></i>
+                <h4 style="margin: 0;">学习进度报告</h4>
+            </div>
+            <div style="font-size: 14px; line-height: 1.5;">
+                ${messages.map(msg => `<div>✅ ${msg}</div>`).join('')}
+            </div>
+            <div style="text-align: right; margin-top: 10px; font-size: 12px;">
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 3px 10px; border-radius: 3px; cursor: pointer;">
+                    关闭
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // 8秒后自动消失
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.style.animation = 'fadeOut 0.5s ease-out forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            }
+        }, 8000);
+    }
+}
+
+// ✅ 新增：简单通知
+function showSimpleNotification(completedCount, latestChapter, latestScore) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 9999;
+        animation: slideInRight 0.5s ease-out;
+    `;
+    
+    notification.innerHTML = `
+        <div style="display: flex; align-items: center;">
+            <i class="fas fa-trophy" style="font-size: 24px; margin-right: 10px;"></i>
+            <div>
+                <strong>欢迎回来！</strong><br>
+                您已完成 ${completedCount} 个章节<br>
+                最近进度: 第${latestChapter}章 (${latestScore}分)
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'fadeOut 0.5s ease-out forwards';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }
+    }, 5000);
+}
+
+// ✅ 修复：同步进度数据
+function syncProgressData() {
+    console.log('同步进度数据...');
+    
+    let stats = null;
+    
+    // 方法1：使用progressManager
+    if (window.progressManager) {
+        stats = window.progressManager.getStatsForDisplay();
+        console.log('从progressManager获取数据:', stats);
+    } else {
+        // 方法2：直接从localStorage读取
+        stats = getStatsFromLocalStorage();
+        console.log('从localStorage获取数据:', stats);
+    }
+    
+    if (!stats) {
+        console.warn('无法获取进度数据');
+        return;
+    }
+    
+    // ✅ 关键修复：更新章节显示（显示章节数，不是百分比）
+    const lessonDisplay = document.getElementById('lessonDisplay');
+    if (lessonDisplay) {
+        // 显示 "2/10章" 而不是百分比
+        lessonDisplay.textContent = `${stats.completedChapters}/${stats.totalChapters}章`;
+        console.log('更新章节显示为:', lessonDisplay.textContent);
+        
+        // 同时保存百分比到userData（为了兼容其他代码）
+        userData.lessonsCompleted = stats.completionPercentage;
+    }
+    
+    // 更新正确率显示
+    updateAccuracyDisplay(stats.accuracy);
+    
+    // 更新Boss状态显示
+    updateBossStatusDisplay(stats.bossDefeated);
+    
+    // 更新经验值
+    if (window.progressManager) {
+        userData.experience = window.progressManager.calculateTotalExperience();
+    } else {
+        userData.experience = 350 + (stats.completedChapters * 50) + Math.round(stats.accuracy * 1.5);
+        if (stats.bossDefeated) userData.experience += 300;
+    }
+    
+    updateExperienceBar();
+    saveUserData();
+    
+    console.log('同步完成:', stats);
+}
+
+// ✅ 新增：从localStorage获取统计数据
+function getStatsFromLocalStorage() {
+    // 优先读取新的进度格式
+    const progress = JSON.parse(localStorage.getItem('userProgress_v3') || '{}');
+    if (progress.chapters && Object.keys(progress.chapters).length > 0) {
+        let completedCount = 0;
+        let totalAccuracy = 0;
+        let chapterCount = 0;
+        
+        for (const chapterId in progress.chapters) {
+            const chapter = progress.chapters[chapterId];
+            if (chapter.completed) completedCount++;
+            if (chapter.accuracy > 0) {
+                totalAccuracy += chapter.accuracy;
+                chapterCount++;
+            }
+        }
+        
+        const avgAccuracy = chapterCount > 0 ? Math.round(totalAccuracy / chapterCount) : 0;
+        
+        return {
+            completedChapters: completedCount,
+            totalChapters: 10,
+            accuracy: avgAccuracy,
+            bossDefeated: progress.bossDefeated || false,
+            completionPercentage: Math.round((completedCount / 10) * 100)
+        };
+    }
+    
+    // 备用：读取旧的chapterScores
+    const oldScores = JSON.parse(localStorage.getItem('chapterScores') || '{}');
+    let completedCount = 0;
+    let totalScore = 0;
+    let chapterCount = 0;
+    
+    for (let i = 1; i <= 10; i++) {
+        const score = oldScores[i];
+        if (score && score > 0) {
+            if (score >= 60) completedCount++;
+            totalScore += score;
+            chapterCount++;
+        }
+    }
+    
+    const avgScore = chapterCount > 0 ? Math.round(totalScore / chapterCount) : 0;
+    
+    return {
+        completedChapters: completedCount,
+        totalChapters: 10,
+        accuracy: avgScore,
+        bossDefeated: localStorage.getItem('boss_defeated') === 'true',
+        completionPercentage: Math.round((completedCount / 10) * 100)
+    };
+}
+
+// ✅ 新增：更新正确率显示
+function updateAccuracyDisplay(accuracy) {
+    let accuracyDisplay = document.getElementById('accuracyDisplay');
+    
+    if (!accuracyDisplay) {
+        // 创建正确率显示
+        const profileCard = document.querySelector('.profile-card');
+        if (profileCard) {
+            // 先检查是否已存在（可能在HTML中已定义）
+            accuracyDisplay = document.getElementById('accuracyDisplay');
+            if (!accuracyDisplay) {
+                const accuracyItem = document.createElement('div');
+                accuracyItem.className = 'info-item';
+                accuracyItem.innerHTML = `
+                    <span class="info-label">总正确率:</span>
+                    <span class="info-value" id="accuracyDisplay">${accuracy}%</span>
+                `;
+                profileCard.appendChild(accuracyItem);
+                accuracyDisplay = document.getElementById('accuracyDisplay');
+            }
+        }
+    }
+    
+    if (accuracyDisplay) {
+        accuracyDisplay.textContent = `${accuracy}%`;
+    }
+}
+
+// ✅ 新增：更新Boss状态显示
+function updateBossStatusDisplay(bossDefeated) {
+    let bossStatusDisplay = document.getElementById('bossStatusDisplay');
+    
+    if (!bossStatusDisplay) {
+        const profileCard = document.querySelector('.profile-card');
+        if (profileCard) {
+            bossStatusDisplay = document.getElementById('bossStatusDisplay');
+            if (!bossStatusDisplay) {
+                const bossItem = document.createElement('div');
+                bossItem.className = 'info-item';
+                bossItem.innerHTML = `
+                    <span class="info-label">Boss状态:</span>
+                    <span class="info-value" id="bossStatusDisplay" 
+                          style="color: ${bossDefeated ? '#28a745' : '#dc3545'}">
+                        ${bossDefeated ? '已战胜' : '未战胜'}
+                    </span>
+                `;
+                profileCard.appendChild(bossItem);
+            }
+        }
+    }
+    
+    if (bossStatusDisplay) {
+        bossStatusDisplay.textContent = bossDefeated ? '已战胜' : '未战胜';
+        bossStatusDisplay.style.color = bossDefeated ? '#28a745' : '#dc3545';
+    }
+}
+
+// 设置进度监听器
+function setupProgressListeners() {
+    // 监听storage事件
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'userProgress_v3' || e.key === 'chapterScores') {
+            console.log('检测到进度更新:', e.key);
+            syncProgressData();
+            
+            // 显示更新通知
+            showUpdateNotification();
+        }
+    });
+    
+    // 监听消息事件
+    window.addEventListener('message', function(event) {
+        if (event.data && (event.data.type === 'progressUpdate' || event.data.type === 'bossVictory')) {
+            console.log('收到进度更新消息:', event.data.type);
+            syncProgressData();
+            
+            // 显示特定通知
+            if (event.data.type === 'bossVictory') {
+                showBossVictoryNotification();
+            } else {
+                showUpdateNotification();
+            }
+        }
+    });
+    
+    // 监听自定义事件
+    window.addEventListener('progressUpdated', function(event) {
+        console.log('收到进度更新事件');
+        if (event.detail) {
+            syncProgressData();
+            showUpdateNotification();
+        }
+    });
+}
+
+// ✅ 新增：显示更新通知
+function showUpdateNotification() {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        z-index: 9999;
+        animation: slideInUp 0.5s ease-out;
+        font-size: 14px;
+    `;
+    
+    notification.innerHTML = `
+        <i class="fas fa-sync-alt"></i> 进度已更新
+        <span style="margin-left: 5px; font-size: 12px;">${new Date().toLocaleTimeString().slice(0,5)}</span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'fadeOut 0.5s ease-out forwards';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }
+    }, 3000);
+}
+
+// ✅ 新增：Boss战胜通知
+function showBossVictoryNotification() {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        color: #8b4513;
+        padding: 20px 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        z-index: 10000;
+        animation: popIn 0.5s ease-out;
+        text-align: center;
+        min-width: 300px;
+        border: 3px solid gold;
+    `;
+    
+    notification.innerHTML = `
+        <div style="font-size: 48px; margin-bottom: 10px;">🏆</div>
+        <h3 style="margin: 0 0 10px 0;">BOSS 战胜！</h3>
+        <p style="margin: 0;">恭喜击败红色暴鲤龙！</p>
+        <p style="margin: 5px 0 15px 0; font-size: 14px;">进度已同步到个人档案</p>
+        <button onclick="this.parentElement.parentElement.remove()" 
+                style="background: #8b4513; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer;">
+            确定
+        </button>
+    `;
+    
+    document.body.appendChild(notification);
+}
+
+// 设置重置按钮
+function setupResetButton() {
+    const resetBtn = document.getElementById('resetProgressBtn');
+    if (!resetBtn) return;
+    
+    resetBtn.addEventListener('click', function() {
+        if (confirm('确定要重置所有答题进度吗？\n这将清除：\n• 所有章节进度\n• Boss战胜记录\n• 答题经验值')) {
+            if (window.progressManager) {
+                window.progressManager.resetProgress();
+            } else {
+                // 清除所有相关数据
+                localStorage.removeItem('userProgress_v3');
+                localStorage.removeItem('chapterScores');
+                localStorage.removeItem('chapterAttempts');
+                localStorage.removeItem('boss_defeated');
+                
+                for (let i = 1; i <= 10; i++) {
+                    localStorage.removeItem(`chapter_${i}_progress`);
+                }
+                
+                userData.experience = 350;
+                userData.lessonsCompleted = 0;
+                localStorage.setItem('userProfile_experience', '350');
+                localStorage.setItem('userProfile_lessonsCompleted', '0');
+            }
+            
+            syncProgressData();
+            
+            // 显示重置通知
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #dc3545;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                z-index: 9999;
+            `;
+            notification.textContent = '✅ 进度已重置！';
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+    });
+}
+
+// ==================== 以下是原有函数，保持不动 ====================
+
+function loadUserData() {
+    document.getElementById('usernameDisplay').textContent = userData.username;
+    document.getElementById('userIdDisplay').textContent = userData.userId;
+    
+    let genderText = '';
+    switch(userData.gender) {
+        case 'male': genderText = '男性'; break;
+        case 'female': genderText = '女性'; break;
+        default: genderText = '其他'; break;
+    }
+    document.getElementById('genderDisplay').textContent = genderText;
+}
+
+function renderFriends() {
+    const friendsList = document.getElementById('friendsList');
+    if (!friendsList) return;
+    
+    friendsList.innerHTML = '';
+    userData.friends.forEach(friend => {
+        const friendCard = `
+            <div class="friend-card">
+                <img src="${friend.avatar}" alt="${friend.name}" class="friend-avatar">
+                <div style="font-weight:600;color:#333">${friend.name}</div>
+                <div style="font-size:.9rem;color:#666">在线</div>
+            </div>`;
+        friendsList.innerHTML += friendCard;
+    });
+}
+
+function updateExperienceBar() {
+    const experienceBar = document.getElementById('experienceBar');
+    const experienceText = document.getElementById('experienceText');
+    
+    if (!experienceBar || !experienceText) return;
+    
+    const level = Math.floor(userData.experience / 500) + 1;
+    const currentLevelMinXP = (level - 1) * 500;
+    const currentLevelProgress = userData.experience - currentLevelMinXP;
+    const currentLevelTotal = 500;
+    const percentage = Math.min((currentLevelProgress / currentLevelTotal) * 100, 100);
+    
+    experienceBar.style.width = `${percentage}%`;
+    experienceText.textContent = 
+        `Lv.${level} ${userData.experience}/${level * 500} XP`;
+}
+
+function editField(field) {
+    currentEditField = field;
+    document.getElementById('usernameEdit').style.display = 'none';
+    document.getElementById('userIdEdit').style.display = 'none';
+    document.getElementById('genderEdit').style.display = 'none';
+    document.getElementById('passwordEdit').style.display = 'none';
+    
+    const editForm = document.getElementById('editForm');
+    editForm.classList.add('active');
+    
+    document.querySelectorAll('.gender-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    switch(field) {
+        case 'username':
+            document.getElementById('editTitle').textContent = '编辑用户名';
+            document.getElementById('usernameEdit').style.display = 'block';
+            document.getElementById('usernameInput').value = userData.username;
+            break;
+        case 'userId':
+            document.getElementById('editTitle').textContent = '编辑角色ID';
+            document.getElementById('userIdEdit').style.display = 'block';
+            document.getElementById('userIdInput').value = userData.userId;
+            break;
+        case 'gender':
+            document.getElementById('editTitle').textContent = '选择性别';
+            document.getElementById('genderEdit').style.display = 'block';
+            const genderOption = document.querySelector(`.gender-option[onclick*="${userData.gender}"]`);
+            if (genderOption) genderOption.classList.add('selected');
+            break;
+        case 'password':
+            document.getElementById('editTitle').textContent = '修改密码';
+            document.getElementById('passwordEdit').style.display = 'block';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordConfirm').value = '';
+            break;
+    }
+}
+
+function selectGender(gender) {
+    document.querySelectorAll('.gender-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    const selectedOption = document.querySelector(`.gender-option[onclick*="${gender}"]`);
+    if (selectedOption) selectedOption.classList.add('selected');
+    
+    let genderText = '';
+    switch(gender) {
+        case 'male': genderText = '男性'; break;
+        case 'female': genderText = '女性'; break;
+        default: genderText = '其他'; break;
+    }
+    document.getElementById('genderDisplay').textContent = genderText;
+}
+
+function saveChanges() {
+    switch(currentEditField) {
+        case 'username':
+            const newUsername = document.getElementById('usernameInput').value.trim();
+            if (newUsername) {
+                userData.username = newUsername;
+                localStorage.setItem('userProfile_username', newUsername);
+                document.getElementById('usernameDisplay').textContent = newUsername;
+            }
+            break;
+        case 'userId':
+            const newUserId = document.getElementById('userIdInput').value.trim();
+            if (newUserId) {
+                userData.userId = newUserId;
+                localStorage.setItem('userProfile_userId', newUserId);
+                document.getElementById('userIdDisplay').textContent = newUserId;
+            }
+            break;
+        case 'gender':
+            const selectedGender = document.querySelector('.gender-option.selected');
+            if (selectedGender) {
+                const onclickAttr = selectedGender.getAttribute('onclick');
+                const genderMatch = onclickAttr.match(/'([^']+)'/);
+                if (genderMatch) {
+                    userData.gender = genderMatch[1];
+                    localStorage.setItem('userProfile_gender', genderMatch[1]);
+                }
+            }
+            break;
+        case 'password':
+            const newPassword = document.getElementById('passwordInput').value;
+            const confirmPassword = document.getElementById('passwordConfirm').value;
+            
+            if (!newPassword) {
+                alert('请输入新密码！');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('两次输入的密码不一致！');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('密码长度不能少于6位！');
+                return;
+            }
+            
+            userData.password = newPassword;
+            localStorage.setItem('userProfile_password', newPassword);
+            alert('密码修改成功！');
+            break;
+    }
+    
+    cancelEdit();
+    showNotification();
+}
+
+function cancelEdit() {
+    document.getElementById('editForm').classList.remove('active');
+    currentEditField = '';
+    loadUserData();
+}
+
+function changeAvatar() {
+    const avatarSeed = prompt('请输入头像种子（英文或数字）:', '用户');
+    if (avatarSeed) {
+        const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(avatarSeed)}`;
+        document.getElementById('avatarImg').src = avatarUrl;
+        localStorage.setItem('userProfile_avatar', avatarUrl);
+        showNotification();
+    }
+}
+
+function showNotification() {
+    const notification = document.getElementById('saveNotification');
+    notification.classList.add('show');
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 2000);
+}
+
+function saveUserData() {
+    localStorage.setItem('userProfile_experience', userData.experience.toString());
+    localStorage.setItem('userProfile_lessonsCompleted', userData.lessonsCompleted.toString());
+}
+
+// 登出功能
+document.getElementById('logoutButton').addEventListener('click', function() {
+    if (confirm('确定要登出账户吗？')) {
+        sessionStorage.removeItem('isLoggedIn');
+        alert('已登出！');
+        window.location.href = '../../login.html';
+    }
+});
+
+// 添加CSS动画
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideInUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; transform: translateY(-20px); }
+    }
+    
+    @keyframes popIn {
+        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        70% { transform: translate(-50%, -50%) scale(1.1); }
+        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
