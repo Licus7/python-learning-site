@@ -467,7 +467,7 @@
         const newPet = {
             id: pet.id,
             name: pet.name,
-            image: `/pokemon_gifs/${pet.id}.gif`,  // 统一使用本地路径
+            image: `../pokemon_gifs/${pet.id}.gif`,  // 统一使用本地路径
             rarity: pet.rarity,
             type: pet.type,
             typeName: pet.typeName,
