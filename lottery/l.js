@@ -233,7 +233,7 @@
 
     // ===== 系统常量 =====
     const LOTTERY_COST = 20;
-    const LOCAL_BASE_PATH = '/pokemon_gifs/';
+    const LOCAL_BASE_PATH = '../pokemon_gifs/';
     
     // ===== 图片获取系统 =====
     function getPokemonImage(id, useGif = true) {
