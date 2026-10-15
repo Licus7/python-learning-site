@@ -800,11 +800,11 @@ function preloadAllImages() {
     allIds.forEach(id => {
         // 预加载GIF
         const gifImg = new Image();
-        gifImg.src = `/pokemon_gifs/${id}.gif`;
+        gifImg.src = `../pokemon_gifs/${id}.gif`;
         
         // 预加载PNG作为备用
         const pngImg = new Image();
-        pngImg.src = `/pokemon_gifs/${id}.png`;
+        pngImg.src = `../pokemon_gifs/${id}.png`;
     });
     
     console.log('✅ 预加载完成');
@@ -831,11 +831,11 @@ function preloadAllImages() {
     allIds.forEach(id => {
         // 预加载GIF
         const gifImg = new Image();
-        gifImg.src = `/pokemon_gifs/${id}.gif`;
+        gifImg.src = `../pokemon_gifs/${id}.gif`;
         
         // 预加载PNG作为备用
         const pngImg = new Image();
-        pngImg.src = `/pokemon_gifs/${id}.png`;
+        pngImg.src = `../pokemon_gifs/${id}.png`;
     });
     
     console.log('✅ 预加载完成');
