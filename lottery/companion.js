@@ -115,7 +115,7 @@ class CompanionSystem {
         const defaultCompanion = {
             id: 25,
             name: '皮卡丘',
-            image: '/pokemon_gifs/25.gif',
+            image: '../pokemon_gifs/25.gif',
             rarity: 'common',
             type: 'electric',
             obtainedDate: new Date().toISOString()
@@ -292,7 +292,7 @@ class CompanionSystem {
     
     // 获取精灵图片
     getPokemonImage(id, useGif = true) {
-        const basePath = '/pokemon_gifs/';
+        const basePath = '../pokemon_gifs/';
         
         if (useGif) {
             return `${basePath}${id}.gif`;
